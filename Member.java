@@ -1,38 +1,42 @@
 import java.util.*;
 import java.time.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+
+/**
+ * Represents a member of the SACCO. Each member has a maximum age limit and must be
+ * within a valid age range to register. The Member class also tracks personal details
+ * and manages a list of registered members.
+ **/
 
 public class Member {
-    private String aId;
+    private static int MIN_AGE = 18;
+    private static int MAX_AGE = 35;
+
+    private final String aId;
     private String aName;
     private Gender aGender;
     private LocalDate aDateOfBirth;
     private int aAge;
-    private static int registrationFee = 1000; //Kenyan Shillings
-    private LocalDate aDateOfRegistration;
-    private static final Map<String,Member> AMEMBERSLIST = new HashMap<>();
+    private static int registrationFee = 1000; //Kenyan Shillings(for this case)
+    private final LocalDate aDateOfRegistration;
+    private String aStatus;
+    private static final Map<String,Member> AMEMBERSLIST = new ConcurrentHashMap<>(); //Synchronize details
 
 
     public Member(String pName, Gender pGender, LocalDate pDateOfBirth) {
         assert pName != null && pGender != null && pDateOfBirth != null;
-
-        if (calculateAge(pDateOfBirth) > 35 || calculateAge(pDateOfBirth) < 18) {
-            throw new IllegalArgumentException("Member must be 18 years old or older");
-        }
+        validateAge(pDateOfBirth);
 
         this.aId = UUID.randomUUID().toString();
         this.aName = pName;
         this.aGender = pGender;
-        this.aAge = calculateAge(pDateOfBirth);
+        this.aAge = Period.between(pDateOfBirth, LocalDate.now()).getYears();
         this.aDateOfBirth = pDateOfBirth;
         this.aDateOfRegistration = LocalDate.now();
+        this.aStatus = "Active";
 
         AMEMBERSLIST.put(this.aId, this);
-    }
-
-    public static void removeMember(String pMemberId) {
-        assert pMemberId != null && AMEMBERSLIST.containsKey(pMemberId): "Invalid Member ID";
-        AMEMBERSLIST.remove(pMemberId);
     }
 
     public static int getRegistrationFee() {
@@ -71,12 +75,30 @@ public class Member {
         return this.aDateOfRegistration;
     }
 
+    public String getStatus() {
+        return this.aStatus;
+    }
 
-    //Add notify for observers/visitors
-    public void setRegistrationDate(LocalDate newRegistrationDate) {
-        //Get sacco details to limit change of dates for registration
-        assert newRegistrationDate != null: "Registration date cannot be null";
-        this.aDateOfRegistration = newRegistrationDate;
+    public void deactivate() {
+        this.aStatus = "Inactive";
+    }
+
+    public static int getMaxAge() {
+        return MAX_AGE;
+    }
+
+    public static int getMinAge() {
+        return MIN_AGE;
+    }
+
+    public static void setMaxAge(int newMaxAge) {
+        assert newMaxAge > 0;
+        MAX_AGE = newMaxAge;
+    }
+
+    public static void setMinAge(int newMinAge) {
+        assert newMinAge > 0;
+        MIN_AGE = newMinAge;
     }
 
     public void setName(String newName) {
@@ -91,12 +113,9 @@ public class Member {
 
     public void setDateOfBirth(LocalDate newDateOfBirth) {
         assert newDateOfBirth != null: "Date of birth cannot be null";
-        if (calculateAge(newDateOfBirth) > 35 || calculateAge(newDateOfBirth) < 18) {
-            throw new IllegalArgumentException("Member must between 18 and 35 years old");
-        }
+        validateAge(newDateOfBirth);
 
-        //What happens when they reach age limit? Capture bounds of age by the sacco details
-        this.aAge = calculateAge(newDateOfBirth);
+        this.aAge = Period.between(newDateOfBirth, LocalDate.now()).getYears();
         this.aDateOfBirth = newDateOfBirth;
     }
 
@@ -119,7 +138,15 @@ public class Member {
         return Objects.hash(aId);
     }
 
-    private int calculateAge(LocalDate pDateOfBirth) {
-        return Period.between(pDateOfBirth, LocalDate.now()).getYears();
+    /**
+     * Validates the age based on the date of birth.
+     */
+    private void validateAge(LocalDate pDateOfBirth) {
+        int calculatedAge = Period.between(pDateOfBirth, LocalDate.now()).getYears();
+        if (calculatedAge < MIN_AGE || calculatedAge > MAX_AGE) {
+            throw new IllegalArgumentException(
+                    "Member must be between " + MIN_AGE + " and " + MAX_AGE + " years old"
+            );
+        }
     }
 }

@@ -4,20 +4,29 @@ import java.util.*;
 
 
 public class Contributions {
-    private static int MIN_AMOUNT = 500;
+    private static double MIN_AMOUNT = 500;
     private static final Map<String, Contributions> ACONTRIBUTIONSLIST = new HashMap<>();
     private final String aContributionId;
-    private final int aAmount;
+    private final double aAmount;
     private final LocalDate aDate;
     private String aMemberId;
     
 
 
-    public Contributions(String pMemberId, int pAmount) {
+    public Contributions(String pMemberId, double pAmount) {
         assert Member.getMemberList().containsKey(pMemberId):"Invalid Member ID";
 
         if (pAmount < MIN_AMOUNT) {
             throw new IllegalArgumentException("Amount must be greater than 500");
+        }
+
+        if (Member.getMemberList().get(pMemberId).getStatus().equals("Inactive")) {
+            throw new IllegalArgumentException("Member is no longer in the society");
+        }
+
+        if (Member.getMemberList().get(pMemberId).getAge() > Member.getMaxAge()) {
+            MemberCommands.getInstance().deactivateMember(pMemberId);
+            throw new IllegalArgumentException("Member is beyond the age limit of the society.");
         }
 
         this.aContributionId = UUID.randomUUID().toString();
@@ -32,7 +41,7 @@ public class Contributions {
         ACONTRIBUTIONSLIST.remove(pContributionId);
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return this.aAmount;
     }
 
@@ -54,7 +63,7 @@ public class Contributions {
                 " Date: " + this.getDate();
     }
     
-    public static int getMinAmount() {
+    public static double getMinAmount() {
         return MIN_AMOUNT;
     }
 
@@ -62,7 +71,7 @@ public class Contributions {
         return Collections.unmodifiableMap(ACONTRIBUTIONSLIST);
     }
 
-    public static void setMinAmount(int newMinAmount) {
+    public static void setMinAmount(double newMinAmount) {
         assert newMinAmount > 0: "Minimum amount must be greater than 0";
         MIN_AMOUNT = newMinAmount;
     }
