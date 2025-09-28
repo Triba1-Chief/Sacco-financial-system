@@ -3,7 +3,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-
 /**
  * The Loans class represents a loan taken by a member with specified attributes like
  * loan type, borrowed amount, guarantors, and their associated amounts. The class includes
@@ -24,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 
-public class Loans {
+public class Loan {
     private final String aLoanId;
     private final String aMemberId;
     private final LoanTypes aLoanType;
@@ -36,11 +35,11 @@ public class Loans {
     private final double aGuarantor2Amount;
     private final LocalDate aDate; //Once approved it can't be changed
     private String status;
-    private static List<Member> aGuarantors;
-    private static final Map<String,Loans> ALOANLIST = new ConcurrentHashMap<>();
+    private static List<Member> aGuarantors = new ArrayList<>();
+    private static final Map<String,Loan> ALOANLIST = new ConcurrentHashMap<>();
 
 
-    public Loans(String pMemberId, LoanTypes pLoanType, double pAmountBorrowed, String pGuarantor1, String pGuarantor2,
+    public Loan(String pMemberId, LoanTypes pLoanType, double pAmountBorrowed, String pGuarantor1, String pGuarantor2,
                  double pGuarantor1Amount, double pGuarantor2Amount) {
 
         if (!(LoanCommands.getInstance().isApproved(pMemberId) &&
@@ -70,7 +69,7 @@ public class Loans {
         return Collections.unmodifiableList(aGuarantors);
     }
 
-    public static Map<String, Loans> getLoanList() {
+    public static Map<String, Loan> getLoanList() {
         return ALOANLIST;
     }
 
@@ -122,7 +121,7 @@ public class Loans {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Loans l) {
+        if (o instanceof Loan l) {
             return this.aLoanId.equals(l.aLoanId);
         }
         return false;
