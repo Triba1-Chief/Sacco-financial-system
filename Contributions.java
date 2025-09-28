@@ -2,18 +2,21 @@ import java.time.LocalDate;
 import java.util.*;
 
 
+/**
+ * Represents a contribution made by a member at the SACCO.
+ **/
 
-public class Contributions {
+
+public class Contribution {
     private static double MIN_AMOUNT = 500;
-    private static final Map<String, Contributions> ACONTRIBUTIONSLIST = new HashMap<>();
+    private static final Map<String, Contribution> ACONTRIBUTIONSLIST = new HashMap<>();
     private final String aContributionId;
     private final double aAmount;
     private final LocalDate aDate;
     private String aMemberId;
     
 
-
-    public Contributions(String pMemberId, double pAmount) {
+    public Contribution(String pMemberId, double pAmount) {
         assert Member.getMemberList().containsKey(pMemberId):"Invalid Member ID";
 
         if (pAmount < MIN_AMOUNT) {
@@ -67,7 +70,7 @@ public class Contributions {
         return MIN_AMOUNT;
     }
 
-    public static Map<String, Contributions> getContributionList() {
+    public static Map<String, Contribution> getContributionList() {
         return Collections.unmodifiableMap(ACONTRIBUTIONSLIST);
     }
 
@@ -82,7 +85,7 @@ public class Contributions {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Contributions c) {
+        if (o instanceof Contribution c) {
             return this.aContributionId.equals(c.aContributionId);
         }
         return false;
