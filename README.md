@@ -10,3 +10,7 @@ Includes member registration, contributions, loan applications, repayments, and 
 - Loan eligibility, applications, and guarantees
 - Repayment tracking and loan balances
 - Automated savings and annual dividend calculations
+
+  ## How to Run
+1. Open `MainApp.java` and run with VM options:
+   
