@@ -1,0 +1,29 @@
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #f4f6fb;
+}
+.label {
+    -fx-text-fill: #1b2430;
+    -fx-font-size: 16px;
+}
+.button {
+    -fx-background-color: #006eff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, #333, 2, 0.2, 0, 2);
+}
+.text-field, .combo-box, .date-picker {
+    -fx-background-radius: 8;
+    -fx-background-color: #fafcff;
+    -fx-border-color: #c4c8d0;
+    -fx-border-radius: 8;
+    -fx-padding: 8px;
+}
+.tab-pane .tab-header-area {
+    -fx-background-color: #006eff;
+}
+.tab-pane .tab {
+    -fx-background-color: #fafdff;
+    -fx-font-size: 15px;
+}
