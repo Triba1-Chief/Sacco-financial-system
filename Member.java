@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * and manages a list of registered members.
  **/
 
+
 public class Member {
     private static int MIN_AGE = 18;
     private static int MAX_AGE = 35;
