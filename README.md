@@ -12,5 +12,5 @@ Includes member registration, contributions, loan applications, repayments, and 
 - Automated savings and annual dividend calculations
 
   ## How to Run
-1. Open `SaccoApp.java` and run with VM options:
+Open `SaccoApp.java` and run 
    
